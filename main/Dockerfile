@@ -5,5 +5,3 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 RUN apt-get install -y libpq-dev
-
-CMD python manage.py runserver 0.0.0.0:9000
