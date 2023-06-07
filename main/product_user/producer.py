@@ -1,7 +1,12 @@
 import json
 import pika
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-params = pika.URLParameters('amqps://waezmnsx:5ATtwcDKyZKVkAqxbGbW3mvrXcbfSlyv@goose.rmq2.cloudamqp.com/waezmnsx')
+queue_url = os.getenv("RABBIT_MQ_URL")
+
+params = pika.URLParameters(queue_url)
 
 connection = pika.BlockingConnection(params)
 

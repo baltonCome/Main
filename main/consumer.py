@@ -7,10 +7,14 @@ import pika
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'main.settings')
 django.setup()
 # Rest of your code
+from dotenv import load_dotenv
+load_dotenv()
+
+queue_url = os.getenv("RABBIT_MQ_URL")
 
 from product_user.models import Product
 
-params = pika.URLParameters('amqps://waezmnsx:5ATtwcDKyZKVkAqxbGbW3mvrXcbfSlyv@goose.rmq2.cloudamqp.com/waezmnsx')
+params = pika.URLParameters(queue_url)
 
 connection = pika.BlockingConnection(params)
 
@@ -27,25 +31,18 @@ if channel.is_open:
 
         if properties.content_type == 'product_created':
             product = Product(id=data['id'], title=data['title'], image=data['image'])
-            # db.session.add(product)
-            # db.session.commit()
             product.save()
             print('Product Created')
 
         elif properties.content_type == 'product_updated':
-            # product = Product.query.get(data['data'])
             product = Product.objects.get(pk=data['data'])
             product.title = data['title']
             product.image = data['image']
-            #db.session.commit()
             product.save()
             print('Product Updated')
         
         elif properties.content_type == 'product_deleted':
-            # product = Product.query.get(data['data'])
             product = Product.objects.get(pk=data['data'])
-            # db.session.delete(product)
-            # db.session.commit()
             product.delete()
             print('Product Deleted')
     

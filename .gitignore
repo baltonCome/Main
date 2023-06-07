@@ -3,3 +3,4 @@ main/.db-data
 main/product_user/__pycache__
 main/productUser/__pycache__
 main/__pycache__
+.env
